@@ -18,25 +18,12 @@ app.use(express.static(path.join(__dirname, "./static")));
 // setting up ejs and our views folder
 app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'ejs');
-// root route to render the index.ejs view
-app.get('/', function(req, res) {
-  res.render("index");
-})
-app.post('/quotes', function(req,res){
-  var quote = new Quote({name: req.body.name, quote: req.body.quote});
-  quote.save(function(err) {
-    if(err){
-      console.log("something went wrong");
-    } else {
-      res.redirect('/main');
-    }
-  })
-})
-app.get('/main', function (req, res) {
-  Quote.find({}, function (err, quotes){
-    res.render('main', {quotes:quotes});  
-  });
-})
+
+// store the function in a variable
+var routes_setter = require('./server/config/routes.js');
+// invoke the function stored in routes_setter and pass it the "app" variable
+routes_setter(app);
+
 // tell the express app to listen on port 8000
 app.listen(8000, function() {
   console.log("listening on port 8000");
